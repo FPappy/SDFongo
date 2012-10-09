@@ -33,6 +33,7 @@ public class FongoDBCollection extends DBCollection {
   private final boolean isDebug;
   private final boolean nonIdCollection;
   private final ObjectComparator objectComparator;
+  private static final String EMPTY_STRING = "";
   
   public FongoDBCollection(FongoDB db, String name) {
     super(db, name);
@@ -78,7 +79,7 @@ public class FongoDBCollection extends DBCollection {
   }
 
   public Object putIdIfNotPresent(DBObject obj) {
-    if (!obj.containsField(ID_KEY)) {
+    if (!obj.containsField(ID_KEY) || (obj.get(ID_KEY) == null || obj.get(ID_KEY).equals(EMPTY_STRING))) {
       ObjectId id = new ObjectId();
       if (!nonIdCollection){
         obj.put(ID_KEY, id);

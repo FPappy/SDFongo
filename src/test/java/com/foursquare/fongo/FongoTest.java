@@ -27,6 +27,7 @@ import com.mongodb.WriteConcern;
 public class FongoTest {
 
   private static final String BasicBSONList = null;
+  private static final String TEST_EMPTY_STRING = "";
 
   @Test
   public void testGetDb() {
@@ -515,7 +516,28 @@ public class FongoTest {
     collection.insert(inserted);
     collection.save(inserted);
   }
-  
+
+    @Test
+    public void testSaveWithNullIdField() {
+        DBCollection collection = newCollection();
+        BasicDBObject inserted = new BasicDBObject("_id", null);
+        collection.insert(inserted);
+        collection.save(inserted);
+        assertNotNull(inserted.get("_id" ));
+        assertTrue(!inserted.get("_id" ).equals(TEST_EMPTY_STRING));
+    }
+
+    @Test
+    public void testSaveWithEmptyIdField() {
+        DBCollection collection = newCollection();
+        BasicDBObject inserted = new BasicDBObject("_id", TEST_EMPTY_STRING);
+        collection.insert(inserted);
+        collection.save(inserted);
+        assertNotNull(inserted.get("_id" ));
+        assertTrue(!inserted.get("_id" ).equals(TEST_EMPTY_STRING));
+    }
+
+
   @Test(expected = MongoException.DuplicateKey.class)
   public void testInsertDuplicateWithConcernThrows(){
     DBCollection collection = newCollection();
